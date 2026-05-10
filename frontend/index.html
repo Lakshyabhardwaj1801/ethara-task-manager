@@ -949,23 +949,12 @@ async function createProject() {
   const name = document.getElementById('proj-name').value.trim();
   const description = document.getElementById('proj-desc').value.trim();
   if (!name) return showError('proj-error', 'Project name is required.');
-  setLoading('proj-btn', 'proj-btn-text', true, 'Create Project'); // btn is inline, use span hack
-  document.querySelector('#modal-project .btn-primary').disabled = true;
-  document.getElementById('proj-btn-text').innerHTML = '<span class="spinner"></span>';
-  try {
-    await api('/api/projects', { method: 'POST', body: JSON.stringify({ name, description }) });
-    closeModal('modal-project');
-    document.getElementById('proj-name').value = '';
-    document.getElementById('proj-desc').value = '';
-    toast('Project created!');
-    renderProjects();
-  } catch(e) {
-    showError('proj-error', e.message);
-  } finally {
-    document.querySelector('#modal-project .btn-primary').disabled = false;
-    document.getElementById('proj-btn-text').textContent = 'Create Project';
+  const btn = document.querySelector('#modal-project .btn-primary');
+  const btnText = document.getElementById('proj-btn-text');
+  btn.disabled = true;
+  btnText.innerHTML = '<span class="spinner"></span>';
   }
-}
+
 
 async function deleteProject(id) {
   if (!confirm('Delete this project and all its tasks?')) return;

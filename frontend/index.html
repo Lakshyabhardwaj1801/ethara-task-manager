@@ -516,12 +516,18 @@ let selectedProjectMembers = [];
 // ── Utility ───────────────────────────────────────
 async function api(path, opts = {}) {
   const headers = { 'Content-Type': 'application/json' };
-  if (token) headers['Authorization'] = `Bearer ${token}`;
-  const res = await fetch(API + path, { headers, ...opts });
+  const savedToken = localStorage.getItem('ethara_token');
+  if (savedToken) headers['Authorization'] = `Bearer ${savedToken}`;
+  const res = await fetch(path, { headers, ...opts });
+  if (res.status === 401) {
+    logout();
+    throw new Error('Session expired. Please login again.');
+  }
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(data.detail || 'Request failed');
   return data;
 }
+
 
 function toast(msg, type = 'success') {
   const el = document.createElement('div');
@@ -953,7 +959,21 @@ async function createProject() {
   const btnText = document.getElementById('proj-btn-text');
   btn.disabled = true;
   btnText.innerHTML = '<span class="spinner"></span>';
+  try {
+    await api('/api/projects', { method: 'POST', body: JSON.stringify({ name, description }) });
+    closeModal('modal-project');
+    document.getElementById('proj-name').value = '';
+    document.getElementById('proj-desc').value = '';
+    toast('Project created!');
+    renderProjects();
+  } catch(e) {
+    showError('proj-error', e.message);
+  } finally {
+    btn.disabled = false;
+    btnText.textContent = 'Create Project';
   }
+}
+  
 
 
 async function deleteProject(id) {

@@ -2,9 +2,8 @@
 
 A full-stack **Team Task Manager** built for Ethara AI's Round 1 assessment.
 
-**Live Demo:** `<your-railway-url>`  
-**Demo Video:** `<your-loom-link>`  
-**GitHub:** `<your-repo-url>`
+**Live Demo:** https://web-production-d414d.up.railway.app/
+**GitHub:** https://github.com/Lakshyabhardwaj1801/ethara-task-manager/tree/main
 
 ---
 
